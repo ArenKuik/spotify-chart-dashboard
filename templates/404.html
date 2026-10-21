@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Page not found – Spotify Chart Dashboard{% endblock %}
+
+{% block content %}
+<h1>Page not found</h1>
+<p>We couldn't find that page or song. It may not have been in the US top 200 during these weeks.</p>
+<p><a href="{{ url_for('index') }}">Back to the home page</a></p>
+{% endblock %}

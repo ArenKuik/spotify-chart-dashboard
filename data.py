@@ -72,3 +72,30 @@ def rank_history(charts, top_n=5):
         "weeks": [pd.Timestamp(w).strftime("%b %d") for w in weeks],
         "songs": songs,
     }
+
+
+def song_history(charts, track_id):
+    """Rank and streams in every week for one song, or None if the id is unknown."""
+    history = charts[charts["track_id"] == track_id]
+    if history.empty:
+        return None
+
+    weeks = []
+    for week in sorted(charts["week"].unique()):
+        row = history[history["week"] == week]
+        weeks.append({
+            "week": pd.Timestamp(week).strftime("%b %d"),
+            # None means the song was not in the top 200 that week
+            "rank": int(row["rank"].iloc[0]) if not row.empty else None,
+            "streams": int(row["streams"].iloc[0]) if not row.empty else None,
+        })
+
+    first = history.iloc[0]
+    return {
+        "track_id": track_id,
+        "track_name": first["track_name"],
+        "artist_names": first["artist_names"],
+        "best_rank": int(history["rank"].min()),
+        "total_streams": int(history["streams"].sum()),
+        "weeks": weeks,
+    }

@@ -12,7 +12,7 @@
     <div class="card">
         <h2>Biggest climber</h2>
         {% if summary.climber %}
-        <p><strong>{{ summary.climber.track_name }}</strong> by {{ summary.climber.artist_names }}</p>
+        <p><strong><a href="{{ url_for('song', track_id=summary.climber.track_id) }}">{{ summary.climber.track_name }}</a></strong> by {{ summary.climber.artist_names }}</p>
         <p>Up {{ summary.climber.climb }} places, from #{{ summary.climber.previous_rank }} to #{{ summary.climber.rank }}</p>
         {% else %}
         <p>No song moved up this week.</p>
@@ -21,7 +21,7 @@
     <div class="card">
         <h2>Newest entry</h2>
         {% if summary.newest %}
-        <p><strong>{{ summary.newest.track_name }}</strong> by {{ summary.newest.artist_names }}</p>
+        <p><strong><a href="{{ url_for('song', track_id=summary.newest.track_id) }}">{{ summary.newest.track_name }}</a></strong> by {{ summary.newest.artist_names }}</p>
         <p>New at #{{ summary.newest.rank }}</p>
         {% else %}
         <p>No new songs this week.</p>
@@ -56,7 +56,7 @@
                 {% else %}–
                 {% endif %}
             </td>
-            <td>{{ song.track_name }}</td>
+            <td><a href="{{ url_for('song', track_id=song.track_id) }}">{{ song.track_name }}</a></td>
             <td>{{ song.artist_names }}</td>
             <td>{{ "{:,}".format(song.streams) }}</td>
         </tr>
