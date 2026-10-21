@@ -4,12 +4,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Spotify Chart Dashboard{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <nav>
-        <a href="{{ url_for('index') }}">Home</a> ·
-        <a href="{{ url_for('upload') }}">Upload a chart</a>
-    </nav>
+    <header class="site-header">
+        <div class="inner">
+            <a class="brand" href="{{ url_for('index') }}">
+                <span class="brand-dot" aria-hidden="true"></span>
+                Spotify Chart Dashboard
+            </a>
+            <nav class="site-nav">
+                <a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Home</a>
+                <a href="{{ url_for('upload') }}" {% if request.endpoint == 'upload' %}class="active"{% endif %}>Upload a chart</a>
+            </nav>
+        </div>
+    </header>
     <main>
         {% block content %}{% endblock %}
     </main>

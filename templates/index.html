@@ -1,78 +1,89 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Spotify Chart Dashboard</h1>
+<section class="page-intro">
+    <h1>This week's top songs</h1>
+    {% if not error %}
+    <p>US weekly chart for the week of {{ summary.week.strftime("%B") }} {{ summary.week.day }}, {{ summary.week.year }}.</p>
+    {% endif %}
+</section>
 
 {% if error %}
 <p class="error">{{ error }}</p>
 {% else %}
-<p>US weekly top songs for the week of {{ summary.week.strftime("%B") }} {{ summary.week.day }}, {{ summary.week.year }}.</p>
-
 <section class="cards">
     <div class="card">
         <h2>Biggest climber</h2>
         {% if summary.climber %}
-        <p><strong><a href="{{ url_for('song', track_id=summary.climber.track_id) }}">{{ summary.climber.track_name }}</a></strong> by {{ summary.climber.artist_names }}</p>
-        <p>Up {{ summary.climber.climb }} places, from #{{ summary.climber.previous_rank }} to #{{ summary.climber.rank }}</p>
+        <p class="song-title"><a href="{{ url_for('song', track_id=summary.climber.track_id) }}">{{ summary.climber.track_name }}</a></p>
+        <p>by {{ summary.climber.artist_names }}</p>
+        <p class="detail">Up {{ summary.climber.climb }} places, from #{{ summary.climber.previous_rank }} to #{{ summary.climber.rank }}</p>
         {% else %}
-        <p>No song moved up this week.</p>
+        <p class="detail">No song moved up this week.</p>
         {% endif %}
     </div>
     <div class="card">
         <h2>Newest entry</h2>
         {% if summary.newest %}
-        <p><strong><a href="{{ url_for('song', track_id=summary.newest.track_id) }}">{{ summary.newest.track_name }}</a></strong> by {{ summary.newest.artist_names }}</p>
-        <p>New at #{{ summary.newest.rank }}</p>
+        <p class="song-title"><a href="{{ url_for('song', track_id=summary.newest.track_id) }}">{{ summary.newest.track_name }}</a></p>
+        <p>by {{ summary.newest.artist_names }}</p>
+        <p class="detail">New at #{{ summary.newest.rank }}</p>
         {% else %}
-        <p>No new songs this week.</p>
+        <p class="detail">No new songs this week.</p>
         {% endif %}
     </div>
 </section>
 
-<h2>Rank over time: current top {{ history.songs|length }}</h2>
-<div style="position: relative; height: 360px; max-width: 800px;">
-    <canvas id="rank-chart" aria-label="Line chart of weekly rank for the current top 5 songs"></canvas>
-</div>
+<section class="panel">
+    <h2>Rank over time: current top {{ history.songs|length }}</h2>
+    <div class="chart-box">
+        <canvas id="rank-chart" aria-label="Line chart of weekly rank for the current top 5 songs"></canvas>
+    </div>
+</section>
 
-<h2>Top {{ summary.top_songs|length }}</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Rank</th>
-            <th>Change</th>
-            <th>Song</th>
-            <th>Artist</th>
-            <th>Streams</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for song in summary.top_songs %}
-        <tr>
-            <td>{{ song.rank }}</td>
-            <td>
-                {% if song.previous_rank == -1 %}NEW
-                {% elif song.previous_rank > song.rank %}▲ {{ song.previous_rank - song.rank }}
-                {% elif song.previous_rank < song.rank %}▼ {{ song.rank - song.previous_rank }}
-                {% else %}–
-                {% endif %}
-            </td>
-            <td><a href="{{ url_for('song', track_id=song.track_id) }}">{{ song.track_name }}</a></td>
-            <td>{{ song.artist_names }}</td>
-            <td>{{ "{:,}".format(song.streams) }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<section class="panel">
+    <h2>Top {{ summary.top_songs|length }}</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Change</th>
+                    <th>Song</th>
+                    <th>Artist</th>
+                    <th class="number">Streams</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in summary.top_songs %}
+                <tr>
+                    <td class="rank">{{ song.rank }}</td>
+                    <td>
+                        {% if song.previous_rank == -1 %}<span class="change new">NEW</span>
+                        {% elif song.previous_rank > song.rank %}<span class="change up">▲ {{ song.previous_rank - song.rank }}</span>
+                        {% elif song.previous_rank < song.rank %}<span class="change down">▼ {{ song.rank - song.previous_rank }}</span>
+                        {% else %}<span class="change same">–</span>
+                        {% endif %}
+                    </td>
+                    <td><a href="{{ url_for('song', track_id=song.track_id) }}">{{ song.track_name }}</a></td>
+                    <td class="muted">{{ song.artist_names }}</td>
+                    <td class="number">{{ "{:,}".format(song.streams) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 {% endif %}
 {% endblock %}
 
 {% block scripts %}
 {% if history %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='chart-theme.js') }}"></script>
 <script>
     const rankHistory = {{ history|tojson }};
-    // One fixed color and marker shape per line, in chart order
-    const colors = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4"];
+    // One marker shape per line, so lines can be told apart without colour
     const shapes = ["circle", "rect", "triangle", "rectRot", "star"];
 
     new Chart(document.getElementById("rank-chart"), {
@@ -82,9 +93,10 @@
             datasets: rankHistory.songs.map((song, i) => ({
                 label: song.label,
                 data: song.ranks,
-                borderColor: colors[i],
-                backgroundColor: colors[i],
+                borderColor: CHART_COLORS[i],
+                backgroundColor: CHART_COLORS[i],
                 borderWidth: 2,
+                tension: 0.3,
                 pointStyle: shapes[i],
                 pointRadius: 5,
                 pointHoverRadius: 7,
@@ -94,6 +106,7 @@
             maintainAspectRatio: false,
             interaction: { mode: "index", intersect: false },
             scales: {
+                x: { grid: { display: false } },
                 y: {
                     reverse: true,  // rank 1 at the top
                     min: 1,

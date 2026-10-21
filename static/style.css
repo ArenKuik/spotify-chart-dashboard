@@ -1,0 +1,440 @@
+/* Soft sage theme. All colours live here so they are easy to change. */
+:root {
+    --bg: #f4f3ec;            /* warm cream page background */
+    --surface: #fffefa;       /* cards and panels */
+    --sage-50: #eef3ec;
+    --sage-100: #dfe8dc;
+    --sage-300: #a9bfa6;
+    --sage-500: #6f8f6e;
+    --sage-700: #44604a;
+    --text: #2c3a30;
+    --text-muted: #66746a;
+    --border: #e3e7dd;
+    --up: #3f7a52;
+    --down: #a8564a;
+    --error-bg: #fbefea;
+    --error-border: #ecc9bd;
+    --error-text: #8a3b2e;
+    --radius: 16px;
+    --shadow: 0 1px 2px rgba(44, 58, 48, 0.04), 0 4px 16px rgba(44, 58, 48, 0.06);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+a {
+    color: var(--sage-700);
+    text-decoration-color: var(--sage-300);
+    text-underline-offset: 3px;
+}
+
+a:hover {
+    text-decoration-color: var(--sage-700);
+}
+
+h1, h2 {
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+h1 {
+    font-size: 2rem;
+    margin: 0 0 0.25rem;
+}
+
+h2 {
+    font-size: 1.15rem;
+    margin: 0 0 1rem;
+}
+
+code {
+    background: var(--sage-50);
+    border-radius: 6px;
+    padding: 0.1em 0.4em;
+    font-size: 0.9em;
+}
+
+/* ---------- Header ---------- */
+
+.site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.site-header .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.9rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.brand-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--sage-300), var(--sage-500));
+}
+
+.site-nav {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.site-nav a {
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--text-muted);
+}
+
+.site-nav a:hover {
+    background: var(--sage-50);
+    color: var(--sage-700);
+}
+
+.site-nav a.active {
+    background: var(--sage-100);
+    color: var(--sage-700);
+    font-weight: 600;
+}
+
+/* ---------- Page layout ---------- */
+
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+}
+
+.page-intro {
+    margin-bottom: 1.75rem;
+}
+
+.page-intro p {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ---------- Home page cards ---------- */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.25rem 1.5rem;
+    border-top: 4px solid var(--sage-300);
+}
+
+.card h2 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    margin: 0.25rem 0;
+}
+
+.card .song-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.card .detail {
+    color: var(--text-muted);
+}
+
+/* ---------- Charts ---------- */
+
+.chart-box {
+    position: relative;
+    height: 360px;
+}
+
+.chart-box.small {
+    height: 280px;
+}
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+/* ---------- Tables ---------- */
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+th {
+    text-align: left;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+td {
+    padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: var(--sage-50);
+}
+
+td.number, th.number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+td.rank {
+    font-weight: 700;
+    width: 3.5rem;
+}
+
+td.muted {
+    color: var(--text-muted);
+}
+
+/* Rank change badges */
+.change {
+    display: inline-block;
+    min-width: 3.25rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.change.up {
+    color: var(--up);
+    background: #e6f0e4;
+}
+
+.change.down {
+    color: var(--down);
+    background: #f8ebe7;
+}
+
+.change.same {
+    color: var(--text-muted);
+    background: #efefe9;
+}
+
+.change.new {
+    color: var(--surface);
+    background: var(--sage-500);
+}
+
+/* ---------- Song page ---------- */
+
+.song-header {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.album-art {
+    width: 160px;
+    height: 160px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: var(--shadow);
+}
+
+.album-art.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: var(--sage-50);
+    border: 1px dashed var(--sage-300);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+    box-shadow: none;
+}
+
+.song-header .artist {
+    margin: 0 0 1rem;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.stats {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.stat {
+    background: var(--sage-50);
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+}
+
+.stat .label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.stat .value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Messages ---------- */
+
+.error {
+    background: var(--error-bg);
+    border: 1px solid var(--error-border);
+    color: var(--error-text);
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.error p, .error ul {
+    margin: 0.25rem 0;
+}
+
+.success {
+    background: var(--sage-50);
+    border: 1px solid var(--sage-100);
+    color: var(--sage-700);
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ---------- Upload form ---------- */
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.upload-form label {
+    font-weight: 600;
+}
+
+.upload-form input[type="file"] {
+    width: 100%;
+    max-width: 480px;
+    padding: 1.25rem;
+    background: var(--sage-50);
+    border: 1.5px dashed var(--sage-300);
+    border-radius: 12px;
+    color: var(--text-muted);
+    font: inherit;
+}
+
+.upload-form input[type="file"]::file-selector-button {
+    margin-right: 1rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--sage-300);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--sage-700);
+    font: inherit;
+    cursor: pointer;
+}
+
+.button {
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-radius: 999px;
+    background: var(--sage-700);
+    color: var(--surface);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: var(--text);
+}
+
+/* ---------- Error pages ---------- */
+
+.message-page {
+    max-width: 560px;
+    margin: 3rem auto;
+    text-align: center;
+}
+
+.message-page p {
+    color: var(--text-muted);
+}
