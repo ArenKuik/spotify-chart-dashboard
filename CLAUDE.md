@@ -23,7 +23,6 @@ Columns: `rank, uri, artist_names, track_name, source, peak_rank, previous_rank,
 
 Things to know when loading with pandas:
 - Files start with a UTF-8 BOM; read with `encoding="utf-8-sig"` or the first column name becomes `﻿rank`.
-- `streams` is a quoted string in the CSV; make sure it ends up numeric.
 - `previous_rank` is `-1` for tracks that are new to the chart that week.
 - `artist_names` can list several artists separated by commas inside one quoted field.
 - `uri` (`spotify:track:<id>`) is the stable track key across weeks; track names are not unique.

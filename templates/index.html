@@ -2,5 +2,61 @@
 
 {% block content %}
 <h1>Spotify Chart Dashboard</h1>
-<p>Weekly US Spotify chart data from September 10 to October 15, 2026.</p>
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% else %}
+<p>US weekly top songs for the week of {{ summary.week.strftime("%B") }} {{ summary.week.day }}, {{ summary.week.year }}.</p>
+
+<section class="cards">
+    <div class="card">
+        <h2>Biggest climber</h2>
+        {% if summary.climber %}
+        <p><strong>{{ summary.climber.track_name }}</strong> by {{ summary.climber.artist_names }}</p>
+        <p>Up {{ summary.climber.climb }} places, from #{{ summary.climber.previous_rank }} to #{{ summary.climber.rank }}</p>
+        {% else %}
+        <p>No song moved up this week.</p>
+        {% endif %}
+    </div>
+    <div class="card">
+        <h2>Newest entry</h2>
+        {% if summary.newest %}
+        <p><strong>{{ summary.newest.track_name }}</strong> by {{ summary.newest.artist_names }}</p>
+        <p>New at #{{ summary.newest.rank }}</p>
+        {% else %}
+        <p>No new songs this week.</p>
+        {% endif %}
+    </div>
+</section>
+
+<h2>Top {{ summary.top_songs|length }}</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Change</th>
+            <th>Song</th>
+            <th>Artist</th>
+            <th>Streams</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for song in summary.top_songs %}
+        <tr>
+            <td>{{ song.rank }}</td>
+            <td>
+                {% if song.previous_rank == -1 %}NEW
+                {% elif song.previous_rank > song.rank %}▲ {{ song.previous_rank - song.rank }}
+                {% elif song.previous_rank < song.rank %}▼ {{ song.rank - song.previous_rank }}
+                {% else %}–
+                {% endif %}
+            </td>
+            <td>{{ song.track_name }}</td>
+            <td>{{ song.artist_names }}</td>
+            <td>{{ "{:,}".format(song.streams) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 {% endblock %}
