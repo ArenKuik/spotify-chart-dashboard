@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Flask + pandas dashboard over Spotify weekly US chart data (course assignment: OMIS107 HW4). At this stage the repo holds only the data, dependencies, and empty `templates/` and `static/` directories; no application code exists yet.
+Flask + pandas dashboard over Spotify weekly US chart data (course assignment: OMIS107 HW4). `app.py` defines the Flask app and routes; pages are Jinja templates in `templates/` that extend `base.html`.
+
+Run the dev server: `.venv/bin/python app.py` (debug mode, http://127.0.0.1:5000).
 
 ## Environment
 
@@ -25,3 +27,16 @@ Things to know when loading with pandas:
 - `previous_rank` is `-1` for tracks that are new to the chart that week.
 - `artist_names` can list several artists separated by commas inside one quoted field.
 - `uri` (`spotify:track:<id>`) is the stable track key across weeks; track names are not unique.
+
+
+
+   ## Project
+   Flask dashboard of Spotify US Weekly Top Songs (OMIS 107 HW4).
+   - Data: weekly CSVs in data/, named regional-us-weekly-YYYY-MM-DD.csv.
+     Columns: rank, uri, artist_names, track_name, source, peak_rank,
+     previous_rank (-1 means new), weeks_on_chart, streams.
+   - Packages: flask, pandas, requests. Charts with Chart.js from a CDN.
+   - Requirements: home page + other pages; clear error messages, never
+     a traceback in the browser; requirements.txt, .gitignore, README.
+   - Keep code simple enough for a student to explain in class.
+   - One feature at a time. Don't commit; I commit myself.
