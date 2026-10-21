@@ -1,9 +1,17 @@
+import io
+import re
 from pathlib import Path
 
 import pandas as pd
 
 DATA_DIR = Path(__file__).parent / "data"
 FILE_PREFIX = "regional-us-weekly-"
+FILENAME_PATTERN = re.compile(r"^regional-us-weekly-(\d{4}-\d{2}-\d{2})\.csv$")
+REQUIRED_COLUMNS = [
+    "rank", "uri", "artist_names", "track_name", "source",
+    "peak_rank", "previous_rank", "weeks_on_chart", "streams",
+]
+NUMBER_COLUMNS = ["rank", "peak_rank", "previous_rank", "weeks_on_chart", "streams"]
 
 
 def load_charts():
@@ -99,3 +107,39 @@ def song_history(charts, track_id):
         "total_streams": int(history["streams"].sum()),
         "weeks": weeks,
     }
+
+
+def check_upload(filename, content):
+    """Return a list of problems with an uploaded chart file (empty list means it's fine)."""
+    if not filename.lower().endswith(".csv"):
+        return ["The file must be a .csv file."]
+
+    match = FILENAME_PATTERN.match(filename)
+    if not match:
+        return [f"The file name must look like {FILE_PREFIX}YYYY-MM-DD.csv, "
+                "because the week's date is taken from the name."]
+    try:
+        pd.to_datetime(match.group(1), format="%Y-%m-%d")
+    except ValueError:
+        return [f"{match.group(1)} in the file name is not a real date."]
+    if (DATA_DIR / filename).exists():
+        return [f"A chart for {match.group(1)} has already been uploaded."]
+
+    try:
+        df = pd.read_csv(io.BytesIO(content), encoding="utf-8-sig")
+    except pd.errors.EmptyDataError:
+        return ["The file is empty."]
+    except (UnicodeDecodeError, pd.errors.ParserError):
+        return ["The file could not be read as a CSV. Is it a text file with comma-separated values?"]
+
+    missing = [col for col in REQUIRED_COLUMNS if col not in df.columns]
+    if missing:
+        return ["The file is missing these columns: " + ", ".join(missing) + "."]
+    if df.empty:
+        return ["The file has the right columns but no songs."]
+
+    problems = []
+    for col in NUMBER_COLUMNS:
+        if not pd.api.types.is_numeric_dtype(df[col]) or df[col].isna().any():
+            problems.append(f"Every value in the {col} column must be a whole number.")
+    return problems
