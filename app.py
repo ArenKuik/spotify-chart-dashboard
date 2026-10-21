@@ -60,10 +60,18 @@ def page_not_found(error):
     return render_template("404.html"), 404
 
 
+@app.errorhandler(500)
+def server_error(error):
+    # Flask still prints the full traceback in the terminal for debugging
+    return render_template("500.html"), 500
+
+
 @app.errorhandler(413)
 def file_too_large(error):
     return render_template("upload.html", errors=["The file is too large. The limit is 5 MB."]), 413
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Debug mode is off so visitors never see a traceback.
+    # While developing, run with FLASK_DEBUG=1 for auto-reload and the debugger.
+    app.run()

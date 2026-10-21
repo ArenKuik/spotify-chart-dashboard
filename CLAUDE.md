@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Flask + pandas dashboard over Spotify weekly US chart data (course assignment: OMIS107 HW4). `app.py` defines the Flask app and routes; pages are Jinja templates in `templates/` that extend `base.html`.
 
-Run the dev server: `.venv/bin/python app.py` (debug mode, http://127.0.0.1:5000).
+Run the server: `.venv/bin/python app.py` (http://127.0.0.1:5000). Debug mode is deliberately off so no traceback ever reaches the browser (a course requirement); use `FLASK_DEBUG=1 .venv/bin/python app.py` for auto-reload while developing.
 
 ## Environment
 
