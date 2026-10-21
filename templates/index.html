@@ -29,6 +29,11 @@
     </div>
 </section>
 
+<h2>Rank over time: current top {{ history.songs|length }}</h2>
+<div style="position: relative; height: 360px; max-width: 800px;">
+    <canvas id="rank-chart" aria-label="Line chart of weekly rank for the current top 5 songs"></canvas>
+</div>
+
 <h2>Top {{ summary.top_songs|length }}</h2>
 <table>
     <thead>
@@ -58,5 +63,54 @@
         {% endfor %}
     </tbody>
 </table>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if history %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+    const rankHistory = {{ history|tojson }};
+    // One fixed color and marker shape per line, in chart order
+    const colors = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4"];
+    const shapes = ["circle", "rect", "triangle", "rectRot", "star"];
+
+    new Chart(document.getElementById("rank-chart"), {
+        type: "line",
+        data: {
+            labels: rankHistory.weeks,
+            datasets: rankHistory.songs.map((song, i) => ({
+                label: song.label,
+                data: song.ranks,
+                borderColor: colors[i],
+                backgroundColor: colors[i],
+                borderWidth: 2,
+                pointStyle: shapes[i],
+                pointRadius: 5,
+                pointHoverRadius: 7,
+            })),
+        },
+        options: {
+            maintainAspectRatio: false,
+            interaction: { mode: "index", intersect: false },
+            scales: {
+                y: {
+                    reverse: true,  // rank 1 at the top
+                    min: 1,
+                    title: { display: true, text: "Rank" },
+                    ticks: { precision: 0 },
+                },
+            },
+            plugins: {
+                legend: { position: "bottom", labels: { usePointStyle: true } },
+                tooltip: {
+                    callbacks: {
+                        label: (item) => `${item.dataset.label}: #${item.parsed.y}`,
+                    },
+                },
+            },
+        },
+    });
+</script>
 {% endif %}
 {% endblock %}

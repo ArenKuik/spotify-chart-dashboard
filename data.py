@@ -51,3 +51,24 @@ def latest_week_summary(charts, top_n=20):
         "climber": climber,
         "newest": newest,
     }
+
+
+def rank_history(charts, top_n=5):
+    """Rank in every week for the latest week's top songs, ready for Chart.js."""
+    weeks = sorted(charts["week"].unique())
+    latest = charts[charts["week"] == weeks[-1]].sort_values("rank").head(top_n)
+
+    songs = []
+    for _, song in latest.iterrows():
+        history = charts[charts["track_id"] == song["track_id"]]
+        rank_by_week = dict(zip(history["week"], history["rank"]))
+        songs.append({
+            "label": f"{song['track_name']} – {song['artist_names']}",
+            # None means the song was not in the top 200 that week
+            "ranks": [int(rank_by_week[w]) if w in rank_by_week else None for w in weeks],
+        })
+
+    return {
+        "weeks": [pd.Timestamp(w).strftime("%b %d") for w in weeks],
+        "songs": songs,
+    }
